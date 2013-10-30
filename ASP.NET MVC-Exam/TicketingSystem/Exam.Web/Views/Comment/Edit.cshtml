@@ -1,0 +1,63 @@
+﻿@model Exam.Models.Comment
+
+@{
+    ViewBag.Title = "Comments Administration - Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset class="form-horizontal">
+        <legend>Comment</legend>
+
+        @Html.HiddenFor(model => model.Id)
+
+        <dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.Ticket.Title)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Ticket.Title)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.User.UserName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.User.UserName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Content)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Content)
+            </dd>
+
+        </dl>
+
+        <div class="control-group">
+            @Html.LabelFor(model => model.Content, "Edit comment", new { @class = "control-label" })
+            <div class="controls">
+                @Html.EditorFor(model => model.Content)
+                @Html.ValidationMessageFor(model => model.Content, null, new { @class = "help-inline" })
+            </div>
+        </div>
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Save" class="btn" />
+        </div>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+

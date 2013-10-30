@@ -1,0 +1,73 @@
+﻿@model Exam.Web.Models.TicketCreateModel
+
+@{
+    ViewBag.Title = "Create a ticket";
+}
+
+@{
+    var priorities = new List<SelectListItem>();
+
+
+    priorities.Add(new SelectListItem() { Text = "Medium", Value = "0", Selected = true });
+    priorities.Add(new SelectListItem() { Text = "Low", Value = "1" }); 
+    priorities.Add(new SelectListItem() { Text = "High", Value = "2" });
+}
+
+<h1>Ticketing System</h1>
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("AddTicket", "Ticket"))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    <fieldset class="form-horizontal">
+        <div class="control-group">
+            @Html.LabelFor(m => m.CategoryId, "Caetgory", new { @class = "control-label" })
+            <div class="controls">
+                @(Html.Kendo().DropDownListFor(m => m.CategoryId)
+                .Name("CategoryId")
+                .DataTextField("CategoryName")
+                .DataValueField("CategoryId")
+                .DataSource(source =>
+                {
+                    source.Read("GetCategories", "Ticket");
+                    source.ServerFiltering(true);
+                })
+                )
+            </div>
+        </div>
+        <div class="control-group">
+            @Html.LabelFor(m => m.Title, new { @class = "control-label" })
+            <div class="controls">
+                @Html.EditorFor(m => m.Title)
+            </div>
+        </div>
+        <div class="control-group">
+            @Html.LabelFor(m => m.Priority, new { @class = "control-label" })
+                <div class="controls">
+                    @Html.DropDownList("Priority", priorities)
+                    </div>
+                </div>
+        <div class="control-group">
+            @Html.LabelFor(m => m.ImageUrl, "Screenshot URL", new { @class = "control-label" })
+            <div class="controls">
+                @Html.EditorFor(m => m.ImageUrl)
+            </div>
+        </div>
+
+        <div class="control-group">
+            @Html.LabelFor(m => m.Description, new { @class = "control-label" })
+            <div class="controls">
+                @Html.EditorFor(m => m.Description)
+            </div>
+        </div>
+        <div class="form-actions no-color">
+            <input type="submit" value="Create ticket" class="btn" />
+        </div>
+    </fieldset>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

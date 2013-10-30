@@ -1,0 +1,82 @@
+﻿@model Exam.Web.Models.TicketDisplayModel
+
+@{
+    ViewBag.Title = "Ticket - " + Model.Title;
+}
+
+<h1>Ticketing system</h1>
+
+<h2>@Model.Title</h2>
+
+<h3>Category: @Model.CategoryName</h3>
+
+<div class="row-fluid">
+    <span class="span7">
+        <div class="pull-left">
+            <p><strong>Author: </strong>@Model.AuthorName</p>
+            @if (@Model.Priority != null)
+            {
+                <p><strong>Priority: </strong>@Model.Priority</p>
+            }
+        </div>
+        @if (@Model.ImageUrl != null)
+        {
+            <img class="pull-right" src="@Model.ImageUrl" alt="@Model.Title" />
+        }
+    </span>
+
+    <span class="span5">
+        @if (@Model.Description != null)
+        {
+            <p><strong>Description: </strong>@Model.Description</p>
+        }
+    </span>
+</div>
+
+<div class="row-fluid">
+    <h3>Comments</h3>
+    <span class="span6" id="comments">
+        @if (@Model.Comments.Count() == 0)
+        {
+            <h4>No Comments</h4>
+        }
+        else
+        {
+            foreach (var comment in @Model.Comments)
+            {
+                @Html.Partial("_CommentPartial", comment);
+            }
+        }
+    </span>
+</div>
+
+<div class="row-fluid">
+    <span class="span6">
+        <h3>Comment the ticket</h3>
+            @{
+                using (Ajax.BeginForm("AddComment", "Ticket", new { ticketId = Model.Id }, new AjaxOptions()
+                {
+                    UpdateTargetId = "comments",
+                    InsertionMode = InsertionMode.InsertAfter,
+                    OnFailure = "onPostCommentFailure",
+                    OnSuccess = "onPostCommentSuccess"
+                }))
+                {
+                    <textarea name="Content" rows="7" id="commentArea"></textarea>
+                    <p>
+                        <input type="submit" class="btn btn-primary" value="Submit comment" />
+                    </p>
+                }
+}
+        <span class="text-error" id="commentPostFailure"></span>
+    </span>
+</div>
+
+<script>
+    function onPostCommentFailure() {
+        $("#commentPostFailure").text("Comment must be between 2 and 500 symbols.");
+    }
+    function onPostCommentSuccess() {
+        $("#commentArea").val("");
+    }
+</script>
